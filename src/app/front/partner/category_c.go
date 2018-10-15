@@ -12,7 +12,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/jsix/gof"
-	"github.com/jsix/gof/web"
+	//"github.com/jsix/gof/web"
 	"github.com/jsix/gof/web/ui/tree"
 	"go2o/src/app/cache"
 	"go2o/src/core/domain/interface/sale"
@@ -24,6 +24,7 @@ import (
 	"net/http"
 	"regexp"
 	"strconv"
+	"github.com/jsix/gof/web/form"
 )
 
 type categoryC struct {
@@ -103,9 +104,11 @@ func (this *categoryC) SaveCategory(ctx *echox.Context) error {
 
 		id, err := dps.SaleService.SaveCategory(partnerId, &e)
 		if err != nil {
-			result = gof.Result{Result: false, Message: err.Error()}
+			result = gof.Result{ErrCode: 1, ErrMsg: err.Error()}
 		} else {
-			result = gof.Result{Result: true, Message: "", Data: id}
+			var data = make(map[string]string)
+			data["id"] = fmt.Sprintf("%d", id)
+			result = gof.Result{ErrCode: 0, ErrMsg: "", Data: data}
 		}
 		return ctx.JSON(http.StatusOK, result)
 	}
@@ -123,9 +126,9 @@ func (this *categoryC) DelCategory(ctx *echox.Context) error {
 		//删除分类
 		err := dps.SaleService.DeleteCategory(partnerId, categoryId)
 		if err != nil {
-			result = gof.Result{Result: false, Message: err.Error()}
+			result = gof.Result{ErrCode: 1, ErrMsg: err.Error()}
 		} else {
-			result = gof.Result{Result: true, Message: ""}
+			result = gof.Result{ErrCode: 0, ErrMsg: ""}
 		}
 		return ctx.JSON(http.StatusOK, result)
 	}

@@ -11,7 +11,7 @@ package partner
 import (
 	"encoding/json"
 	"github.com/jsix/gof"
-	"github.com/jsix/gof/web"
+	//"github.com/jsix/gof/web"
 	"go2o/src/app/cache"
 	"go2o/src/core/domain/interface/partner"
 	"go2o/src/core/infrastructure/format"
@@ -20,6 +20,8 @@ import (
 	"html/template"
 	"net/http"
 	"time"
+	"github.com/jsix/gof/web/form"
+	"fmt"
 )
 
 type configC struct {
@@ -64,7 +66,9 @@ func (this *configC) profile_post(ctx *echox.Context) error {
 	result.Error(err)
 	if err == nil {
 		cache.DelPartnerCache(partnerId)
-		result.Data = id
+		var data = make(map[string]string)
+		data["id"] = fmt.Sprintf("%d", id)
+		result.Data = data
 	}
 	return ctx.JSON(http.StatusOK, result)
 }

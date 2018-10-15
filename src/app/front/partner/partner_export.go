@@ -12,7 +12,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"github.com/jsix/gof"
-	"github.com/jsix/gof/data/report"
+	"github.com/jsix/goex/report"
 	"net/http"
 	"strconv"
 	"strings"
@@ -23,7 +23,7 @@ import (
 type PartnerDbGetter struct{}
 
 func (dbGetter *PartnerDbGetter) GetDB() *sql.DB {
-	return gof.CurrentApp.Db().GetDb()
+	return gof.CurrentApp.Db().Raw()
 }
 
 var ExpManager *report.ItemManager = &report.ItemManager{DbGetter: &PartnerDbGetter{}}
