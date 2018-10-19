@@ -21,10 +21,10 @@ import (
 	"go2o/src/app/restapi"
 	"go2o/src/core"
 	"go2o/src/core/service/dps"
+	"go2o/src/fix"
 	"log"
 	"os"
 	"runtime"
-	"go2o/src/fix"
 )
 
 func main() {
@@ -53,10 +53,8 @@ func main() {
 		flag.Usage()
 		return
 	}
-
 	log.SetOutput(os.Stdout)
 	log.SetFlags(log.LstdFlags | log.Ltime | log.Ldate | log.Lshortfile)
-
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	newApp = core.NewMainApp(confFile)
 	if !newApp.Init(debug, trace) {
@@ -64,7 +62,6 @@ func main() {
 	}
 	fix.CustomFix()
 	go fix.SignalNotify(ch)
-
 	if v := newApp.Config().GetInt("server_port"); v != 0 {
 		httpPort = v
 	}
@@ -76,16 +73,12 @@ func main() {
 	cache.Initialize(storage.NewRedisStorage(newApp.Redis()))
 	core.RegisterTypes()
 	session.Initialize(newApp.Storage(), "",false)
-	
 	if runDaemon {
 		go daemon.Run(newApp)
 	}
-
 	go app.Run(ch, newApp, fmt.Sprintf(":%d", httpPort)) //运行HTTP
-
 	go restapi.Run(newApp, restPort) // 运行REST API
 
 	<-ch
-
 	os.Exit(1) // 退出
 }
