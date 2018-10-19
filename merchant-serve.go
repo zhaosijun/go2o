@@ -63,7 +63,7 @@ func main() {
     dps.Init(newApp)
     core.RegisterTypes()
     cache.Initialize(storage.NewRedisStorage(newApp.Redis()))
-    session.Set(newApp.Storage(),"")
+    session.Initialize(newApp.Storage(), "",false)
     go partner.Listen(ch, newApp, fmt.Sprintf(":%d", httpPort))
 
     <-ch
